@@ -1,1 +1,68 @@
 @import "tailwindcss";
+
+/* Layout: 세로 한 줄 흐름 — 거대한 이름 → 출마의 변 → 분야 탭 + 공약 아코디언 → 선본.
+   Color: 차가운 종이색 바탕 + 코발트 하나. 실행 주체 칩만 별도 의미색. */
+:root {
+  --bg: #f1f2f4;
+  --surface: #ffffff;
+  --fg: #12141c;
+  --muted: #5d6273;
+  --line: #d9dbe2;
+  --accent: #2337d4;
+  --accent-soft: #e3e6fb;
+  --on-accent: #ffffff;
+  --solo: #0f7a53;
+  --solo-soft: #dcf1e8;
+  --coop: #9a5b00;
+  --coop-soft: #f8ebd3;
+  --font-display: 'Black Han Sans', 'Noto Sans KR', sans-serif;
+  --font-body: 'IBM Plex Sans KR', 'Noto Sans KR', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d0f17; --surface: #161925; --fg: #eceef4; --muted: #9aa0b4; --line: #2a2e3d;
+    --accent: #7d8cff; --accent-soft: #1f2550; --on-accent: #0d0f17;
+    --solo: #5fd3a3; --solo-soft: #12352a; --coop: #f0b45a; --coop-soft: #3a2b12;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d0f17; --surface: #161925; --fg: #eceef4; --muted: #9aa0b4; --line: #2a2e3d;
+  --accent: #7d8cff; --accent-soft: #1f2550; --on-accent: #0d0f17;
+  --solo: #5fd3a3; --solo-soft: #12352a; --coop: #f0b45a; --coop-soft: #3a2b12;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-solo: var(--solo);
+  --color-solo-soft: var(--solo-soft);
+  --color-coop: var(--coop);
+  --color-coop-soft: var(--coop-soft);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.65;
+  word-break: keep-all;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3 { text-wrap: balance; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.outline-hanja { color: transparent; -webkit-text-stroke: 1.5px var(--accent); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
