@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>동력 공약집</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!--
+    순수 HTML 버전. 내용은 app.js가 data/pledges.json을 읽어 채웁니다.
+    로컬에서 열 때는 파일 더블클릭이 아니라 간이 서버로 여세요 (fetch는 file://에서 막힘):
+      handoff 폴더에서  python3 -m http.server 8000  →  http://localhost:8000/html/
+  -->
+  <header class="header">
+    <div class="wrap">
+      <a href="#top" class="display" style="font-size:20px" data-bind="name"></a>
+      <nav>
+        <a href="#why">출마의 변</a>
+        <a href="#pledges">공약</a>
+        <a href="#team">선본</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. 첫 화면 -->
+    <section id="top" class="wrap hero">
+      <span class="hanja" aria-hidden="true" data-bind="hanja"></span>
+      <p class="mono" style="position:relative;margin:0"><span data-bind="election"></span> · 선거운동본부</p>
+      <h1 class="display" data-bind="name"></h1>
+      <p class="slogan">“<span data-bind="slogan"></span>”</p>
+      <p class="note" data-bind="nameNote"></p>
+      <div class="ballot" id="ballot"></div>
+      <p class="mono" style="position:relative;margin-top:16px;letter-spacing:0">투표 <span id="vote-date"></span></p>
+    </section>
+
+    <!-- 2. 출마의 변 -->
+    <section id="why" class="wrap section">
+      <h2>왜 나왔나</h2>
+      <p class="goal" data-bind="coreGoal"></p>
+      <div class="values" id="values"></div>
+    </section>
+
+    <!-- 3. 공약 -->
+    <section id="pledges" class="wrap section">
+      <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between">
+        <h2>공약</h2>
+        <p class="mono" style="margin:0;letter-spacing:0" id="progress"></p>
+      </div>
+      <div class="toolbar">
+        <div class="tabs" role="tablist" id="tabs"></div>
+        <label class="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--muted);flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="search" placeholder="공약 검색 (예: 도서관)">
+        </label>
+      </div>
+      <p class="intro" id="intro" hidden></p>
+      <ul class="list" id="list"></ul>
+      <p class="empty" id="empty" hidden></p>
+    </section>
+
+    <!-- 4. 선본 -->
+    <section id="team" class="wrap section">
+      <h2>선거운동본부</h2>
+      <div class="team" id="team-list"></div>
+    </section>
+  </main>
+
+  <footer class="wrap footer"><span data-bind="election"></span> 선거운동본부 <span data-bind="name"></span></footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
