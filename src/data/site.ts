@@ -113,9 +113,9 @@ export const categories: Category[] = [
   },
 ]
 
+// 공개 사이트에는 노션에서 '확정'으로 표시된 인원만 둡니다. 팀원 명단은 확정되면 추가하세요.
 export const team = [
+  { name: '정후보', members: ['전호빈'] },
+  { name: '부후보', members: ['전채희'] },
   { name: '선본장', members: ['강민경'] },
-  { name: '홍보팀', members: ['이수연', '박진희', '김서연'] },
-  { name: '사무국', members: ['강민경', '김서연'] },
-  { name: '기획국', members: ['이소정', '종화'] },
 ]
