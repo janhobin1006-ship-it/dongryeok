@@ -41,48 +41,23 @@
     {
       "id": "facility",
       "name": "시설",
-      "intro": "오래된 건물과 생활 시설을 학생 동선에 맞게 고칩니다.",
+      "intro": "학생이 매일 드나드는 건물부터 쌓인 불편을 고칩니다.",
       "pledges": [
+        {
+          "id": "hyehwa-gym",
+          "title": "혜화관 헬스장 보수",
+          "summary": "관리자와 이용자에게 문제를 직접 확인하고, 예산을 확보해 고칩니다",
+          "core": true,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
         {
           "id": "lotus",
           "title": "로터스관 협의체 마련",
-          "summary": "사용실 배부, 소음 문제 해결 (방음막 추가 설치 및 교실 이동)",
-          "why": "",
-          "how": "",
-          "feasibility": "",
-          "effect": ""
-        },
-        {
-          "id": "sculpture",
-          "title": "조소과 건물 수리·보수",
-          "summary": "리모델링 및 환경 개선",
-          "why": "",
-          "how": "",
-          "feasibility": "",
-          "effect": ""
-        },
-        {
-          "id": "hakmun-b1",
-          "title": "학술문화관 지하 환경 개선",
-          "summary": "예술대와 협의해 실질적인 문제를 파악한 뒤 학교와 협의",
-          "why": "",
-          "how": "",
-          "feasibility": "",
-          "effect": ""
-        },
-        {
-          "id": "law-restroom",
-          "title": "법학관 화장실 개선",
-          "summary": "",
-          "why": "",
-          "how": "",
-          "feasibility": "",
-          "effect": ""
-        },
-        {
-          "id": "library-hours",
-          "title": "도서관 개방 시간 확대",
-          "summary": "",
+          "summary": "사용실 배분과 소음 문제를 이용 단체와 함께 정합니다",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
@@ -91,25 +66,18 @@
         {
           "id": "wonheung",
           "title": "원흥관 시설 개선",
-          "summary": "화장실, 아리수 등 복지 및 누수 문제 위주 (공과대와 협의)",
+          "summary": "화장실·누수·아리수 문제를 공과대와 함께 해결합니다",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
           "effect": ""
         },
         {
-          "id": "smoking",
-          "title": "흡연부스 증설",
-          "summary": "",
-          "why": "건물 출입구 주변 흡연으로 간접흡연 불편이 큽니다. 지정 흡연구역이 부족하고, 위치도 학생 동선과 맞지 않습니다. (구체적 위치 및 수량 확인 필요)",
-          "how": "흡연구역 전수조사 → 학생 동선 기준 새 위치안 작성 → 시설팀 협의 후 설치",
-          "feasibility": "총학 단독 + 학교 협의",
-          "effect": "1학기 내 부스 설치, 학기말에 출입구 흡연 민원 감소 여부 공개"
-        },
-        {
-          "id": "union-hall",
-          "title": "학생회관 냉난방·화장실 개선",
-          "summary": "냉방 문제 및 위생 시설 개선",
+          "id": "library-hours",
+          "title": "도서관 운영시간 확대",
+          "summary": "공부할 수 있는 시간을 늘립니다",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
@@ -117,8 +85,69 @@
         },
         {
           "id": "rooftop",
-          "title": "옥상정원 보수 및 개방 활성화",
-          "summary": "휴게 시설 조성, 시범 운영(가오픈)",
+          "title": "옥상정원 보수·개방",
+          "summary": "휴게 시설을 갖추고 시범 개방부터 시작합니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "hakmun",
+          "title": "학술문화관 환경 개선",
+          "summary": "냉난방·해충·방음 문제를 예술대와 함께 고칩니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "sculpture",
+          "title": "조소과 작업 환경 개선",
+          "summary": "리모델링을 포함해 낡은 작업 공간을 보수합니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "union-hall",
+          "title": "학생회관 냉난방·화장실 개선",
+          "summary": "여름 냉방과 화장실 위생 시설을 손봅니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "law-restroom",
+          "title": "법학관 화장실 개선",
+          "summary": "오래된 화장실 시설을 개선합니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "smoking",
+          "title": "혜화관 구름다리 흡연부스 증설",
+          "summary": "흡연구역을 전수조사해 학생 동선에 맞게 옮기고 늘립니다",
+          "core": false,
+          "why": "건물 출입구 주변 흡연으로 간접흡연 불편이 큽니다. 지정 흡연구역이 부족하고, 위치도 학생 동선과 맞지 않습니다. (구체적 위치 및 수량 확인 필요)",
+          "how": "흡연구역 전수조사 → 학생 동선 기준 새 위치안 작성 → 시설팀 협의 후 설치",
+          "feasibility": "총학 단독 + 학교 협의",
+          "effect": "1학기 내 부스 설치, 학기말에 출입구 흡연 민원 감소 여부 공개"
+        },
+        {
+          "id": "arte-hall",
+          "title": "아르테홀 환경 개선",
+          "summary": "혜화관 경사대 아르테홀의 이용 환경을 고칩니다",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
@@ -126,8 +155,39 @@
         },
         {
           "id": "dorm",
-          "title": "기숙사 시설 보수",
-          "summary": "헬스장 등",
+          "title": "남산학사 시설 보수",
+          "summary": "기숙사 생활 시설을 점검해 보수합니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "dorm-desk",
+          "title": "남산학사 일체형 책상 교체 완료",
+          "summary": "이미 진행 중인 교체를 아직 안 바뀐 구역까지 마칩니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "dorm-wifi",
+          "title": "남산학사 와이파이 개선·증설",
+          "summary": "기숙사 와이파이 속도와 연결 범위를 넓힙니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "bmc-lab",
+          "title": "BMC 실험실 노후 기자재 교체",
+          "summary": "BMC 실험실의 낡은 기자재를 점검해 교체·보수합니다",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
@@ -138,12 +198,23 @@
     {
       "id": "academic",
       "name": "학술",
-      "intro": "수업, 학사 제도, 장학까지 공부하는 환경을 손봅니다.",
+      "intro": "수업과 학사 제도에서 손해 보는 학생이 없게 하겠습니다.",
       "pledges": [
+        {
+          "id": "reserve",
+          "title": "예비군·교생실습 결시자 학습권 보장",
+          "summary": "훈련·실습으로 빠진 수업을 학교 공통 기준으로 인정받게 합니다",
+          "core": true,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
         {
           "id": "seminar",
           "title": "세미나 개편",
-          "summary": "",
+          "summary": "운영 방식과 인원 계획을 새로 짭니다",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
@@ -151,8 +222,9 @@
         },
         {
           "id": "open-major",
-          "title": "열린전공학부 정식 인정 및 학부 연계 지원",
-          "summary": "",
+          "title": "열린전공학부 정식 학부 인정",
+          "summary": "정식 학부로 인정받고 학사 지원을 마련합니다",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
@@ -160,8 +232,29 @@
         },
         {
           "id": "video-lecture",
-          "title": "영상강의 수강 인원 확대",
-          "summary": "군 e러닝 증설, 군 계절학기 증설",
+          "title": "영상강의 증설",
+          "summary": "수강 인원을 늘리고 교수 강의권도 함께 보호합니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "military-elearning",
+          "title": "군 e러닝·군 계절학기 증설",
+          "summary": "군 복무 중에도 학점을 이어 갈 수 있게 합니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "liberal-abs",
+          "title": "교양 절대평가 확대",
+          "summary": "교양 과목의 상대평가 부담을 줄입니다",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
@@ -171,15 +264,7 @@
           "id": "contract-dept",
           "title": "계약학과(학부) 신설",
           "summary": "",
-          "why": "",
-          "how": "",
-          "feasibility": "",
-          "effect": ""
-        },
-        {
-          "id": "liberal-abs",
-          "title": "교양 절대평가 도입",
-          "summary": "",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
@@ -187,8 +272,66 @@
         },
         {
           "id": "gosi",
-          "title": "고시반 개선 및 증설",
-          "summary": "",
+          "title": "고시반 지원 확대",
+          "summary": "고시반 운영을 개선하고 자리를 늘립니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "summer-survey",
+          "title": "계절학기 수요조사·확대",
+          "summary": "개설 전 수요를 조사해 과목 개설에 반영합니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "exchange",
+          "title": "교환학생 지원 확대",
+          "summary": "교환학생 정보를 모아 제공하고 지원을 늘립니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "buddhist-scholar",
+          "title": "불교계 장학금 일반 학생 확대",
+          "summary": "불교계 장학금 대상을 일반 학생까지 넓힙니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        }
+      ]
+    },
+    {
+      "id": "communication",
+      "name": "소통",
+      "intro": "학생 의견이 학교 운영에 실제로 반영되는 통로를 만듭니다.",
+      "pledges": [
+        {
+          "id": "town-hall",
+          "title": "총장·총학생회장 정기 간담회",
+          "summary": "의제를 모아 직접 전하고, 다음 간담회에서 이행 여부를 확인합니다",
+          "core": true,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "channel",
+          "title": "총학생회 기존 채널 활성화",
+          "summary": "잘 쓰이지 않던 통합 카카오톡 채널을 공지·민원 창구로 다시 살립니다",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
@@ -197,43 +340,18 @@
         {
           "id": "tuition-committee",
           "title": "등록금심의위원회 학부 자문위원",
-          "summary": "",
+          "summary": "등록금 논의에 학부생 의견이 들어가게 합니다",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
           "effect": ""
         },
         {
-          "id": "summer-survey",
-          "title": "계절학기 수요조사 및 반영",
-          "summary": "",
-          "why": "",
-          "how": "",
-          "feasibility": "",
-          "effect": ""
-        },
-        {
-          "id": "buddhist-scholar",
-          "title": "불교계 장학금 연계",
-          "summary": "",
-          "why": "",
-          "how": "",
-          "feasibility": "",
-          "effect": ""
-        },
-        {
-          "id": "reserve",
-          "title": "예비군 학습권 보장",
-          "summary": "",
-          "why": "",
-          "how": "",
-          "feasibility": "",
-          "effect": ""
-        },
-        {
-          "id": "exchange",
-          "title": "교환학생 확대 및 학생 의견 반영",
-          "summary": "",
+          "id": "bmc-tf",
+          "title": "BMC TF팀 개설",
+          "summary": "BMC 학생 의견을 따로 듣고 챙기는 전담 창구를 만듭니다",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
@@ -243,13 +361,14 @@
     },
     {
       "id": "welfare",
-      "name": "소통·복지",
-      "intro": "학생 목소리가 닿는 창구를 늘리고, 캠퍼스 생활을 편하게 만듭니다.",
+      "name": "복지",
+      "intro": "축제부터 통학까지 캠퍼스 생활의 불편을 줄입니다.",
       "pledges": [
         {
           "id": "festival-budget",
           "title": "축제 예산 확보",
-          "summary": "중구청 지원, 기업 후원",
+          "summary": "중구청 지원과 기업 후원으로 축제 예산을 넓힙니다",
+          "core": true,
           "why": "",
           "how": "",
           "feasibility": "",
@@ -258,7 +377,8 @@
         {
           "id": "picnic-day",
           "title": "캠퍼스 피크닉 데이",
-          "summary": "하루 차량을 통제하고 학교 일일행사 진행",
+          "summary": "하루 교내 차량을 통제하고 모두 즐기는 행사를 엽니다",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
@@ -266,26 +386,9 @@
         },
         {
           "id": "festival-content",
-          "title": "축제 3일 신규 콘텐츠 도입",
-          "summary": "대운동장 에어바운스(물놀이) 등",
-          "why": "",
-          "how": "",
-          "feasibility": "",
-          "effect": ""
-        },
-        {
-          "id": "delivery",
-          "title": "건물별 배달존 마련",
-          "summary": "",
-          "why": "",
-          "how": "",
-          "feasibility": "",
-          "effect": ""
-        },
-        {
-          "id": "town-hall",
-          "title": "총장·총학생회장 정기 간담회",
-          "summary": "",
+          "title": "축제 신규 콘텐츠 도입",
+          "summary": "대운동장 에어바운스(물놀이) 등 새 콘텐츠를 들입니다",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
@@ -294,7 +397,28 @@
         {
           "id": "sports",
           "title": "시즌별 스포츠 단체관람",
-          "summary": "장충체육관, FC서울 등",
+          "summary": "장충체육관·FC서울 경기 단체관람을 시즌마다 엽니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "delivery",
+          "title": "건물별 배달존 마련",
+          "summary": "건물마다 배달 음식을 받는 지정 장소를 만듭니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "dept-room",
+          "title": "과방 없는 학과 공간 확보",
+          "summary": "과방이 없는 학과를 전수조사해 공간을 마련합니다",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
@@ -303,7 +427,8 @@
         {
           "id": "parking",
           "title": "주차권 제휴",
-          "summary": "재계약 여부 확인 필요",
+          "summary": "재계약 시점에 맞춰 학생 주차권 제휴를 이어 갑니다",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
@@ -311,8 +436,29 @@
         },
         {
           "id": "shuttle",
-          "title": "셔틀 운영 시간 수요조사 및 증편",
-          "summary": "최적 시간대 증편",
+          "title": "셔틀 운영시간 개선",
+          "summary": "수요조사로 이용이 몰리는 시간대를 찾아 증편합니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "homecoming-bus",
+          "title": "명절 귀향버스",
+          "summary": "추석에 운영한 귀향버스를 명절마다 이어 갑니다",
+          "core": false,
+          "why": "",
+          "how": "",
+          "feasibility": "",
+          "effect": ""
+        },
+        {
+          "id": "reserve-bus",
+          "title": "예비군버스",
+          "summary": "예비군 훈련장까지 오가는 버스를 운영합니다",
+          "core": false,
           "why": "",
           "how": "",
           "feasibility": "",
