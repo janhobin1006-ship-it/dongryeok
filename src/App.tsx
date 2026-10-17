@@ -95,7 +95,7 @@ function PledgeRow({ p, cat, showCat }: { p: Pledge; cat: string; showCat: boole
       >
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            {p.core && <span className="rounded bg-accent px-1.5 py-0.5 text-[11px] font-semibold text-on-accent">핵심공약</span>}
+            {p.core && <span className="rounded bg-accent px-1.5 py-0.5 text-[11px] font-semibold text-on-accent">메인공약</span>}
             {showCat && <span className="font-mono text-[11px] tracking-wider text-muted">{cat}</span>}
           </div>
           <h3 className="mt-1 text-[17px] font-semibold text-fg group-hover:text-accent">{p.title}</h3>

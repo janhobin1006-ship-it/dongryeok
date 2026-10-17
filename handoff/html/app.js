@@ -41,7 +41,7 @@
     return `<li class="item">
       <button aria-expanded="false">
         <div class="body">
-          ${p.core ? '<span class="badge">핵심공약</span> ' : ''}${tab === 'all' ? `<span class="mono" style="font-size:11px">${esc(p.cat)}</span>` : ''}
+          ${p.core ? '<span class="badge">메인공약</span> ' : ''}${tab === 'all' ? `<span class="mono" style="font-size:11px">${esc(p.cat)}</span>` : ''}
           <h3>${esc(p.title)}</h3>
           ${p.summary ? `<p class="sum">${esc(p.summary)}</p>` : ''}
         </div>
