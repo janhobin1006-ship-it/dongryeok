@@ -1,68 +1,103 @@
 @import "tailwindcss";
 
-/* Layout: 세로 한 줄 흐름 — 거대한 이름 → 출마의 변 → 분야 탭 + 공약 아코디언 → 선본.
-   Color: 차가운 종이색 바탕 + 코발트 하나. 실행 주체 칩만 별도 의미색. */
+/* 동력 — 피그마 게시물(포스터·카드뉴스·정책자료집) 미감.
+   색은 로고 3색 고정: 네이비 #0B0931 · 주황 #FD6804 · 흰색. 글꼴은 Pretendard 하나. */
 :root {
-  --bg: #f1f2f4;
-  --surface: #ffffff;
-  --fg: #12141c;
-  --muted: #5d6273;
-  --line: #d9dbe2;
-  --accent: #2337d4;
-  --accent-soft: #e3e6fb;
-  --on-accent: #ffffff;
-  --solo: #0f7a53;
-  --solo-soft: #dcf1e8;
-  --coop: #9a5b00;
-  --coop-soft: #f8ebd3;
-  --font-display: 'Black Han Sans', 'Noto Sans KR', sans-serif;
-  --font-body: 'IBM Plex Sans KR', 'Noto Sans KR', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0d0f17; --surface: #161925; --fg: #eceef4; --muted: #9aa0b4; --line: #2a2e3d;
-    --accent: #7d8cff; --accent-soft: #1f2550; --on-accent: #0d0f17;
-    --solo: #5fd3a3; --solo-soft: #12352a; --coop: #f0b45a; --coop-soft: #3a2b12;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0d0f17; --surface: #161925; --fg: #eceef4; --muted: #9aa0b4; --line: #2a2e3d;
-  --accent: #7d8cff; --accent-soft: #1f2550; --on-accent: #0d0f17;
-  --solo: #5fd3a3; --solo-soft: #12352a; --coop: #f0b45a; --coop-soft: #3a2b12;
-  color-scheme: dark;
+  --navy: #0b0931;
+  --navy-2: #2b285c;
+  --block: #1e1a6e;
+  --orange: #fd6804;
+  --orange-ink: #b94a00; /* 흰 바탕 위 작은 주황 글자 (대비 4.5:1 이상) */
+  --paper: #f1f0f5;
+  --bubble: #ececf1;
+  --ink: #0b0931;
+  --body: #3b3a52;
+  --muted: #6b6a80;
+  --line: #dddce6;
+  --font: 'Pretendard Variable', Pretendard, -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
+  color-scheme: light;
 }
 
 @theme inline {
-  --color-bg: var(--bg);
-  --color-surface: var(--surface);
-  --color-fg: var(--fg);
+  --color-navy: var(--navy);
+  --color-navy-2: var(--navy-2);
+  --color-block: var(--block);
+  --color-orange: var(--orange);
+  --color-orange-ink: var(--orange-ink);
+  --color-paper: var(--paper);
+  --color-bubble: var(--bubble);
+  --color-ink: var(--ink);
+  --color-body: var(--body);
   --color-muted: var(--muted);
   --color-line: var(--line);
-  --color-accent: var(--accent);
-  --color-accent-soft: var(--accent-soft);
-  --color-on-accent: var(--on-accent);
-  --color-solo: var(--solo);
-  --color-solo-soft: var(--solo-soft);
-  --color-coop: var(--coop);
-  --color-coop-soft: var(--coop-soft);
-  --font-display: var(--font-display);
-  --font-sans: var(--font-body);
-  --font-mono: var(--font-mono);
+  --font-sans: var(--font);
 }
 
+html { scroll-behavior: smooth; background: var(--navy); }
 body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: var(--font-body);
-  font-size: 15px;
+  margin: 0;
+  background: var(--navy);
+  color: #fff;
+  font-family: var(--font);
+  font-size: 16px;
   line-height: 1.65;
+  letter-spacing: -0.02em;
   word-break: keep-all;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  -webkit-font-smoothing: antialiased;
 }
-h1, h2, h3 { text-wrap: balance; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
-.outline-hanja { color: transparent; -webkit-text-stroke: 1.5px var(--accent); }
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+h1, h2, h3 { text-wrap: balance; letter-spacing: -0.04em; }
+@layer base { img { display: block; max-width: 100%; } }
+:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; border-radius: 6px; }
+
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 1120px; margin-left: auto; margin-right: auto; }
+
+/* 포스터 질감: 피그마 메인 포스터의 오버레이 텍스처 */
+.texture { position: relative; isolation: isolate; }
+.texture::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: var(--tex) center / cover; mix-blend-mode: overlay; opacity: .2;
+}
+
+/* 로고: 피그마 로고 SVG를 그대로 사용 */
+.logo { aspect-ratio: 842 / 862; }
+
+/* 카드뉴스 헤더 필 — 네이비 원 번호 + 그라데이션 필 */
+.pill { display: flex; align-items: center; }
+.pill .num {
+  flex: none; display: grid; place-items: center; border-radius: 999px; background: var(--navy);
+  color: #fff; font-weight: 900; letter-spacing: -0.06em; position: relative; z-index: 1;
+  box-shadow: 0 0 0 4px #fff;
+}
+.pill .bar {
+  flex: 1; min-width: 0; margin-left: -28px; padding-left: 40px; padding-right: 28px;
+  background: linear-gradient(90deg, var(--navy) 12%, var(--navy-2)); color: #fff;
+  border-radius: 0 999px 999px 0; font-weight: 900; letter-spacing: -0.05em; line-height: 1.15;
+}
+
+/* 메인공약 네이비 탭 — 꼬리 달린 말풍선 모양 */
+.tab {
+  position: relative; background: var(--navy); color: #fff; border-radius: 18px;
+  font-weight: 700; letter-spacing: -0.04em; line-height: 1.3;
+}
+.tab::after {
+  content: ""; position: absolute; right: 10px; bottom: -14px; width: 22px; height: 18px;
+  background: var(--navy); clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+@media (max-width: 767px) { .tab::after { right: auto; left: 22px; clip-path: polygon(0 0, 100% 0, 0 100%); } }
+
+/* 추가 공약 아코디언 */
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+details[open] .chev { transform: rotate(180deg); }
+
+/* 섹션 간지: 캠퍼스 선화 + 하단 주황 그라데이션 */
+.divider {
+  background:
+    linear-gradient(180deg, var(--navy) 0%, var(--navy) 38%, #3a1a3c 72%, #c2531a 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; animation: none !important; }
+}

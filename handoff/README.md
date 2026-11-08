@@ -67,39 +67,44 @@ DB로 옮겨도 API가 이 모양 그대로 돌려주면 프론트 코드는 손
 ```jsonc
 {
   "campaign": {
-    "name": "동력", "hanja": "動力", "slogan": "동국을 움직이는 힘",
-    "nameNote": "...", "election": "동국대학교 총학생회장단 선거",
-    "ballotNumber": "",        // 기호 확정 시 "1" 등
-    "voteDate": "",            // 예: "11. 25. (화) – 11. 27. (목)"
-    "coreGoal": "...",
-    "candidates": [{ "role": "정후보", "name": "...", "dept": "...", "year": "24" }],
-    "values": [{ "title": "", "body": "" }]   // 3개
+    "name": "동력", "slogan": "동국을 움직이는 힘", "tagline": "동국을 움직이는 힘을 만들다",
+    "election": "...", "org": "...", "nameNote": "...", "coreGoal": "...",
+    "ballotNumber": "",        // 기호 확정 시 "1" 등 (비어 있으면 표시 안 함)
+    "vote": { "period": "11월 24일(화) – 11월 26일(목)", "time": "", "method": "...", "note": "..." },
+    "statement": { "title": "...", "paragraphs": ["..."] },   // 기조문
+    "values": [{ "key": "먼저", "title": "움직이겠습니다", "body": "..." }],   // 3개
+    "candidates": [{ "role": "정후보", "name": "...", "dept": "...", "year": "24", "extra": "...",
+                     "photo": "photos/hobin.jpg", "history": [{ "year": "2024", "items": ["..."] }] }]
   },
   "categories": [{
-    "id": "facility", "name": "시설", "intro": "...",
+    "id": "facility", "no": "01", "name": "시설을 바꾸는 힘", "short": "시설", "intro": "...",
+    "method": ["..."],         // 선택: 분야 공통 진행 방식
     "pledges": [{
-      "id": "smoking",         // 영문 고유값, URL에 써도 됨
-      "title": "흡연부스 증설",
-      "summary": "한 줄 메모",
-      "core": false,           // true면 '핵심공약' 배지 + 목록 맨 위
-      "why": "", "how": "", "effect": "",
-      "feasibility": ""        // "총학 단독 가능" | "학교 협의 필요" | "총학 단독 + 학교 협의" | ""
+      "id": "lotus-council",   // 영문 고유값, URL에 써도 됨
+      "core": true,            // true면 메인공약
+      "title": "로터스관 협의체 마련",
+      "summary": "최종 문구 한 줄",
+      "why": ["근거 문장 (출처)"],   // 끝 괄호는 작은 출처 표기로 나옴
+      "how": ["실행 단계"],
+      "budget": "예산 출처",
+      "measure": "이행 점검 지표"
     }]
   }],
-  "team": [{ "name": "선본장", "members": ["..."] }]
+  "budgetFacts": [{ "value": "18.5억", "label": "시설관리비", "body": "...", "source": "2025 결산서" }],
+  "roadmap": [{ "when": "2027.2", "what": "..." }],
+  "sources": [{ "title": "...", "url": "https://..." }],
+  "team": [{ "name": "선거운동본부장", "members": ["..."] }]
 }
 ```
-
-빈 문자열(`""`)은 화면에 "작성 중"으로 나옵니다. 공약을 채우면 진척도("29개 중 n개 작성 완료")가 자동으로 올라갑니다.
 
 DB로 옮길 때 테이블은 이렇게 나누면 JSON과 바로 맞습니다.
 
 ```sql
-CREATE TABLE categories (id VARCHAR(32) PRIMARY KEY, name VARCHAR(50), intro TEXT, sort INT);
+CREATE TABLE categories (id VARCHAR(32) PRIMARY KEY, no VARCHAR(4), name VARCHAR(50), intro TEXT, sort INT);
 CREATE TABLE pledges (
   id VARCHAR(64) PRIMARY KEY, category_id VARCHAR(32) REFERENCES categories(id),
   title VARCHAR(200), summary TEXT, core BOOLEAN DEFAULT FALSE,
-  why TEXT, how TEXT, effect TEXT, feasibility VARCHAR(30), sort INT
+  why JSON, how JSON, budget TEXT, measure TEXT, sort INT
 );
 ```
 
@@ -132,7 +137,7 @@ handoff/php/api.php 를 MySQL에서 읽도록 바꿔줘.
 ## 7. 공개 전 체크리스트
 
 - [ ] 선거시행세칙: 공식 선거운동 기간 전 온라인 공개가 허용되는지 확인
-- [ ] 기호, 투표일, 선거 회차 입력 (`campaign.ballotNumber`, `voteDate`)
+- [ ] 기호, 투표일, 선거 회차 입력 (`campaign.ballotNumber`, `campaign.vote`)
 - [ ] 핵심 가치 3개, 핵심공약 지정(`core: true`)
 - [ ] 선본원 명단: 지금은 노션에서 '확정'된 3명만 공개
 - [ ] 공약 문구 최종본 반영 (정책자료집과 같은 문구인지 대조)
