@@ -75,27 +75,18 @@ h1, h2, h3 { text-wrap: balance; letter-spacing: -0.04em; }
   border-radius: 0 999px 999px 0; font-weight: 900; letter-spacing: -0.05em; line-height: 1.15;
 }
 
-/* 메인공약 네이비 탭 — 꼬리 달린 말풍선 모양 */
-.tab {
-  position: relative; background: var(--navy); color: #fff; border-radius: 18px;
-  font-weight: 700; letter-spacing: -0.04em; line-height: 1.3;
-}
-.tab::after {
-  content: ""; position: absolute; right: 10px; bottom: -14px; width: 22px; height: 18px;
-  background: var(--navy); clip-path: polygon(0 0, 100% 0, 100% 100%);
-}
-@media (max-width: 767px) { .tab::after { right: auto; left: 22px; clip-path: polygon(0 0, 100% 0, 0 100%); } }
-
-/* 추가 공약 아코디언 */
+/* 출처 접기 */
 details > summary { list-style: none; cursor: pointer; }
 details > summary::-webkit-details-marker { display: none; }
 details[open] .chev { transform: rotate(180deg); }
 
-/* 섹션 간지: 캠퍼스 선화 + 하단 주황 그라데이션 */
-.divider {
-  background:
-    linear-gradient(180deg, var(--navy) 0%, var(--navy) 38%, #3a1a3c 72%, #c2531a 100%);
+/* 목록 줄·버튼 키보드 포커스: GOV.UK처럼 배경을 칠하고 아래에 굵은 선 (색은 동력 주황·네이비) */
+.row:hover { background: var(--paper); }
+.row:focus-visible, .back:focus-visible, .cta:focus-visible {
+  outline: 3px solid transparent; background: var(--orange); color: var(--navy); box-shadow: 0 4px 0 var(--navy);
 }
+.row:focus-visible .text-muted, .row:focus-visible .text-orange-ink { color: var(--navy); }
+.cta:focus-visible { box-shadow: 0 0 0 3px var(--navy), 0 0 0 6px #fff; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

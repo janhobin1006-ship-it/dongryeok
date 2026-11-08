@@ -1,11 +1,20 @@
-import type { ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react'
 import { motion } from 'framer-motion'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, ChevronLeft, ChevronRight, Menu, X } from 'lucide-react'
 import { budgetFacts, campaign, categories, roadmap, sources, team, type Category, type Pledge } from './data/site'
 
 const { vote } = campaign
 const total = categories.reduce((n, c) => n + c.pledges.length, 0)
-const circled = '❶❷❸❹❺❻❼❽❾❿⓫⓬⓭⓮⓯'
+const pledgeIndex = new Map(categories.flatMap((c) => c.pledges.map((p, i) => [p.id, { p, c, i }] as const)))
+
+/* 공약 상세는 #/p/<id> 해시 화면. 목록은 그대로 둔 채 위에 덮어서, 돌아오면 보던 분야와 스크롤 위치가 그대로 남는다. */
+const detailHash = (id: string) => `#/p/${id}`
+const readDetail = () => {
+  const m = location.hash.match(/^#\/p\/([\w-]+)$/)
+  return m && pledgeIndex.has(m[1]) ? m[1] : null
+}
+const nav = { fromList: false, scrollY: 0 }
+const afterPaint = (fn: () => void) => requestAnimationFrame(() => requestAnimationFrame(fn))
 
 function Reveal({ children, className }: { children: ReactNode; className?: string }) {
   return (
@@ -36,26 +45,59 @@ function Label({ children, dark = false }: { children: ReactNode; dark?: boolean
   return <p className={`text-sm font-semibold tracking-normal ${dark ? 'text-orange-ink' : 'text-orange'}`}>{children}</p>
 }
 
+const navLinks = [
+  ['#pledges', '공약'],
+  ['#slogan', '슬로건'],
+  ['#candidates', '후보 소개'],
+  ['#vote', '투표 안내'],
+]
+
+/* GOV.UK Frontend service navigation 방식: 모바일에선 aria-expanded 버튼으로 목록을 열고 닫고, 넓은 화면에선 항상 펼침 */
 function Header() {
-  const links = [
-    ['#slogan', '슬로건'],
-    ['#pledges', '공약'],
-    ['#candidates', '후보'],
-    ['#vote', '투표'],
-  ]
+  const [open, setOpen] = useState(false)
+  const button = useRef<HTMLButtonElement>(null)
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false)
+        button.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
   return (
-    <header className="gutter sticky top-0 z-30 border-b border-white/10 bg-navy/85 backdrop-blur-md">
-      <div className="wrap flex h-14 items-center justify-between gap-4">
-        <a href="#top" className="flex items-center gap-2 font-extrabold tracking-[-0.04em]" aria-label="동력 처음으로">
+    <header className="gutter sticky top-0 z-30 border-b border-white/10 bg-navy/90 backdrop-blur-md">
+      <div className="wrap relative flex h-14 items-center justify-between gap-4">
+        <a href="#top" className="flex items-center gap-2 font-extrabold tracking-[-0.04em]">
           <img src="figma/logo-orange.svg" alt="" className="logo h-7 w-auto" />
           <span className="text-lg">동력</span>
         </a>
-        <nav className="flex gap-4 text-[14px] text-white/75 sm:gap-7 sm:text-[15px]">
-          {links.map(([href, t]) => (
-            <a key={href} href={href} className="py-2 hover:text-white">
-              {t}
-            </a>
-          ))}
+        <button
+          ref={button}
+          type="button"
+          aria-controls="site-menu"
+          aria-expanded={open}
+          onClick={() => setOpen(!open)}
+          className="-mr-2 flex items-center gap-1.5 rounded-lg px-2 py-2 text-[15px] font-semibold md:hidden"
+        >
+          {open ? <X className="size-5" aria-hidden /> : <Menu className="size-5" aria-hidden />}
+          메뉴
+        </button>
+        <nav aria-label="주 메뉴" className="md:static">
+          <ul
+            id="site-menu"
+            className={`${open ? 'flex' : 'hidden'} absolute inset-x-[calc(-1*max(16px,env(safe-area-inset-left,0px)))] top-14 flex-col border-b border-white/10 bg-navy px-4 pb-3 md:static md:flex md:flex-row md:gap-7 md:border-0 md:bg-transparent md:p-0`}
+          >
+            {navLinks.map(([href, t]) => (
+              <li key={href} className="border-t border-white/10 first:border-t-0 md:border-0">
+                <a href={href} onClick={() => setOpen(false)} className="block py-3.5 text-[17px] font-semibold text-white md:py-2 md:text-[15px] md:font-normal md:text-white/80 md:hover:text-white">
+                  {t}
+                </a>
+              </li>
+            ))}
+          </ul>
         </nav>
       </div>
     </header>
@@ -80,44 +122,60 @@ function VoteInfo({ large = false }: { large?: boolean }) {
   )
 }
 
+/* 표지: 실제 포스터처럼 선거명 → 손글씨 슬로건(강조는 여기 한 곳) → 두 후보 → 공약 보기.
+   두 사람은 정면을 보고 어깨가 안쪽으로 모여 있어 옆이 열려 있지 않다 → 제목은 인물 옆 빈칸(왼쪽 열)에 따로 두고 얼굴과 겹치지 않게 한다. */
 function Hero() {
   const [lead, vice] = campaign.candidates
   return (
-    <section id="top" className="texture gutter overflow-hidden pt-12 sm:pt-20">
-      <div className="wrap">
-        <div className="grid items-start gap-8 sm:grid-cols-2 sm:gap-10">
-          <img src="figma/logo-orange.svg" alt="동력 로고" className="logo w-[min(44vw,210px)] sm:ml-[10%] sm:w-[min(30vw,320px)]" />
-          <div className="sm:pt-3">
-            <VoteInfo large />
-          </div>
+    <section id="top" aria-label="표지" className="texture gutter overflow-hidden">
+      <div className="wrap grid gap-x-12 pt-6 md:grid-cols-[1fr_minmax(0,540px)] md:pt-12">
+        <div className="md:col-start-1 md:row-start-1 md:self-end">
+          <p className="text-[15px] font-semibold text-orange md:text-[17px]">{campaign.election}</p>
+          <img src="figma/logo-orange.svg" alt="" className="logo mt-8 hidden w-[132px] md:block" />
+          <h1 className="mt-4 md:mt-7">
+            <img src="figma/slogan-hand.png" alt={campaign.tagline} width={2300} height={408} className="h-auto w-full max-w-[540px]" />
+            <span className="sr-only"> — 선거운동본부 {campaign.name}</span>
+          </h1>
         </div>
 
-        <h1 className="mt-10 sm:mt-14">
-          <img src="figma/slogan-hand.png" alt={campaign.tagline} className="mx-auto w-full max-w-[900px]" />
-        </h1>
-
-        <div className="relative mx-auto mt-6 max-w-[880px]">
-          <img
-            src="photos/duo-cross-cut.webp"
-            alt={`${lead.role} ${lead.name}, ${vice.role} ${vice.name}`}
-            className="mx-auto w-[min(100%,540px)]"
-          />
-          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-navy" />
-          <div className="absolute inset-x-0 bottom-6 flex justify-between gap-4 sm:static sm:contents">
-            <p className="sm:absolute sm:top-[34%] sm:left-0">
-              <span className="block text-sm font-medium text-white/80 sm:text-lg">{lead.role}</span>
-              <span className="block text-4xl font-semibold tracking-[-0.04em] [text-shadow:0_2px_12px_rgba(11,9,49,.8)] sm:text-6xl">{lead.name}</span>
-            </p>
-            <p className="text-right sm:absolute sm:top-[50%] sm:right-0">
-              <span className="block text-sm font-medium text-white/80 sm:text-lg">{vice.role}</span>
-              <span className="block text-4xl font-semibold tracking-[-0.04em] [text-shadow:0_2px_12px_rgba(11,9,49,.8)] sm:text-6xl">{vice.name}</span>
-            </p>
+        <figure className="relative mx-auto mt-5 w-full max-w-[400px] md:col-start-2 md:row-span-2 md:row-start-1 md:mt-0 md:max-w-[540px]">
+          <div className="h-[min(80vw,340px)] overflow-hidden md:h-auto">
+            <img
+              src="photos/duo-cross-cut.webp"
+              alt={`팔짱을 낀 ${lead.role} ${lead.name}(왼쪽)과 ${vice.role} ${vice.name}(오른쪽)`}
+              width={1261}
+              height={1392}
+              className="h-auto w-full"
+            />
           </div>
+          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-transparent to-navy/70 md:hidden" />
+          <figcaption className="absolute inset-x-0 bottom-2 flex items-end justify-between px-1 md:bottom-6">
+            {[lead, vice].map((c, i) => (
+              <p key={c.name} className={i ? 'text-right' : ''}>
+                <span className="block text-[13px] font-medium text-white/85 md:text-base">{c.role}</span>
+                <span className="block text-[28px] leading-tight font-bold tracking-[0.06em] [text-shadow:0_2px_10px_rgba(11,9,49,.9)] md:text-[40px]">
+                  {c.name}
+                </span>
+              </p>
+            ))}
+          </figcaption>
+        </figure>
+
+        <div className="mt-6 pb-8 md:col-start-1 md:row-start-2 md:mt-8 md:self-start md:pb-16">
+          <a href="#pledges" className="cta inline-flex items-center gap-2 rounded-full bg-orange px-6 py-3.5 text-[17px] font-bold text-navy">
+            공약 보기 <ChevronDown className="size-5" aria-hidden />
+          </a>
+          <dl className="mt-5 space-y-1.5 text-[14.5px] leading-snug text-white/85 md:text-base">
+            <div className="flex gap-2.5">
+              <dt className="h-fit shrink-0 bg-orange px-1.5 text-[13px] font-bold text-navy">투표기간</dt>
+              <dd>{vote.period}</dd>
+            </div>
+            <div className="flex gap-2.5">
+              <dt className="h-fit shrink-0 bg-orange px-1.5 text-[13px] font-bold text-navy">투표방법</dt>
+              <dd>{vote.method}</dd>
+            </div>
+          </dl>
         </div>
-      </div>
-      <div className="wrap flex items-center justify-center gap-2 border-t border-white/10 py-5 text-[13px] text-white/75 sm:text-[15px]">
-        <span>{campaign.org}</span>
-        <img src="figma/logo-white.svg" alt="" className="logo h-4 w-auto sm:h-5" />
       </div>
     </section>
   )
@@ -199,15 +257,6 @@ function Statement() {
   )
 }
 
-function Pill({ no, name }: { no: string; name: string }) {
-  return (
-    <div className="pill">
-      <span className="num size-14 text-[26px] sm:size-20 sm:text-[38px]">{no}</span>
-      <h2 className="bar py-3 text-[clamp(1.35rem,5vw,2.5rem)] sm:py-4">{name}</h2>
-    </div>
-  )
-}
-
 function Meta({ p }: { p: Pledge }) {
   return (
     <dl className="grid gap-2.5 text-[14px] sm:grid-cols-2">
@@ -227,7 +276,7 @@ function Why({ items }: { items: string[] }) {
   if (!items.length) return null
   return (
     <div>
-      <h4 className="text-[13px] font-bold text-muted">왜 필요한가</h4>
+      <h3 className="text-[13px] font-bold text-muted">왜 필요한가</h3>
       <ul className="mt-2 space-y-2 text-[15px] leading-relaxed text-body">
         {items.map((w, i) => (
           <li key={i} className="relative pl-3.5 before:absolute before:top-[0.7em] before:left-0 before:size-1.5 before:rounded-full before:bg-orange">
@@ -242,7 +291,7 @@ function Why({ items }: { items: string[] }) {
 function How({ items }: { items: string[] }) {
   return (
     <div>
-      <h4 className="text-[13px] font-bold text-muted">이렇게 하겠습니다</h4>
+      <h3 className="text-[13px] font-bold text-muted">이렇게 하겠습니다</h3>
       <ol className="mt-2 space-y-2.5 text-[15px] leading-relaxed text-ink">
         {items.map((h, i) => (
           <li key={i} className="grid grid-cols-[24px_1fr] gap-2">
@@ -255,170 +304,189 @@ function How({ items }: { items: string[] }) {
   )
 }
 
-function MainPledge({ p, n }: { p: Pledge; n: number }) {
+function openFromList(e: MouseEvent<HTMLAnchorElement>) {
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
+  nav.fromList = true
+  nav.scrollY = window.scrollY
+}
+
+function PledgeRow({ p, i }: { p: Pledge; i: number }) {
   return (
-    <article id={`pledge-${p.id}`} className="grid scroll-mt-20 gap-6 md:grid-cols-[190px_1fr] md:gap-8">
-      <div>
-        <div className="tab px-5 py-4 text-[19px] md:flex md:min-h-[150px] md:items-center md:justify-center md:px-5 md:text-center md:text-[21px]">
-          <span>
-            <span className="mb-1 block text-[12px] font-semibold tracking-normal text-orange">메인공약 {n}</span>
-            {p.title}
-          </span>
-        </div>
-      </div>
-      <div className="min-w-0">
-        <p className="rounded-[22px] bg-bubble px-5 py-4 text-center text-[17px] leading-snug font-bold md:text-[19px]">{p.summary}</p>
-        <div className="mt-6 grid gap-7 lg:grid-cols-2">
-          <Why items={p.why} />
-          <How items={p.how} />
-        </div>
-        <div className="mt-6">
-          <Meta p={p} />
-        </div>
-      </div>
-    </article>
+    <a href={detailHash(p.id)} data-pledge={p.id} onClick={openFromList} className="row flex min-h-[52px] items-center gap-3 py-3">
+      <span className="w-6 shrink-0 text-[13px] font-bold text-muted tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+      <span className="min-w-0 flex-1">
+        {p.core && <span className="block text-[12px] font-bold text-orange-ink">메인공약</span>}
+        <span className="block text-[16px] leading-snug font-semibold">{p.title}</span>
+      </span>
+      <ChevronRight className="size-5 shrink-0 text-muted" aria-hidden />
+    </a>
   )
 }
 
-function ExtraPledge({ p, i }: { p: Pledge; i: number }) {
+function CategoryToc({ c }: { c: Category }) {
   return (
-    <li id={`pledge-${p.id}`} className="scroll-mt-20">
-      <details>
-        <summary className="flex items-start gap-3 py-4">
-          <span className="mt-[1px] text-[22px] leading-none text-navy" aria-hidden>
-            {circled[i]}
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-[16.5px] font-bold">{p.title}</span>
-            <span className="mt-0.5 block text-[14.5px] leading-snug text-body">{p.summary}</span>
-          </span>
-          <ChevronDown className="chev mt-1 size-5 shrink-0 text-muted transition-transform" aria-hidden />
-        </summary>
-        <div className="space-y-5 pb-6 pl-[34px]">
-          <Why items={p.why} />
-          <How items={p.how} />
-          <Meta p={p} />
-        </div>
-      </details>
-    </li>
-  )
-}
-
-const cardPhoto: Record<string, { src: string; alt: string; className: string }> = {
-  academic: {
-    src: 'figma/duo-desk.png',
-    alt: '책상에서 함께 공약을 정리하는 전호빈·전채희 후보',
-    className: 'mx-auto mt-8 w-[min(100%,300px)] md:absolute md:top-5 md:right-8 md:mt-0 md:w-[230px]',
-  },
-  connect: {
-    src: 'figma/duo-gesture.png',
-    alt: '손으로 동력의 ‘ㄷ’을 만드는 전호빈·전채희 후보',
-    className: 'mx-auto mt-10 w-[min(100%,320px)]',
-  },
-}
-
-function CategoryBlock({ c }: { c: Category }) {
-  const mains = c.pledges.filter((p) => p.core)
-  const extras = c.pledges.filter((p) => !p.core)
-  const photo = cardPhoto[c.id]
-  return (
-    <div id={c.id} className="scroll-mt-14">
-      <div className="divider relative overflow-hidden">
-        <img
-          src="figma/campus-lineart-cover.webp"
-          alt=""
-          aria-hidden
-          className="pointer-events-none absolute bottom-0 left-1/2 w-[max(140%,900px)] max-w-none -translate-x-1/2 opacity-55 sm:w-[min(1500px,120%)]"
-        />
-        <div className="gutter">
-          <Reveal className="wrap relative pt-16 pb-[clamp(170px,30vw,340px)] sm:pt-24">
-            <p className="text-[clamp(4.2rem,13vw,8rem)] leading-none font-light tracking-[-0.06em]">{c.no}</p>
-            <h2 className="mt-1 text-[clamp(2rem,6.4vw,3.8rem)] font-medium">{c.name}</h2>
-            <p className="mt-4 max-w-[36rem] text-white/80">{c.intro}</p>
-          </Reveal>
-        </div>
+    <section id={c.id} aria-labelledby={`${c.id}-title`} className="scroll-mt-16 rounded-[24px] bg-white px-4 pt-4 pb-2 text-ink sm:px-6 sm:pt-6">
+      <div className="pill">
+        <span className="num size-11 text-[19px]">{c.no}</span>
+        <h3 id={`${c.id}-title`} className="bar py-2 text-[clamp(1.15rem,4.8vw,1.4rem)]">
+          {c.name}
+        </h3>
       </div>
-
-      <div className="gutter relative pt-8 pb-16 sm:pb-20">
-        <div className="wrap relative rounded-[28px] bg-white px-4 pt-5 pb-8 text-ink sm:px-8 sm:pt-7 md:px-10 md:pb-10">
-          {photo && c.id === 'academic' && <img src={photo.src} alt={photo.alt} className={`hidden md:block ${photo.className}`} />}
-          <div className="md:max-w-[640px]">
-            <Pill no={c.no} name={c.name} />
-          </div>
-
-          {c.method && (
-            <div className="mt-8 rounded-2xl bg-paper p-4 sm:p-5">
-              <p className="text-[13px] font-bold text-muted">시설 공약은 모두 이 순서로 진행합니다</p>
-              <ol className="mt-3 grid gap-2 sm:grid-cols-4 sm:gap-3">
-                {c.method.map((m, i) => (
-                  <li key={i} className="flex items-start gap-2 text-[14.5px] leading-snug font-semibold">
-                    <span className="grid size-6 shrink-0 place-items-center rounded-full bg-orange text-[12px] text-navy">{i + 1}</span>
-                    <span>{m}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          )}
-
-          <div className="mt-10 space-y-14">
-            {mains.map((p, i) => (
-              <MainPledge key={p.id} p={p} n={i + 1} />
-            ))}
-          </div>
-
-          {photo && c.id === 'academic' && <img src={photo.src} alt={photo.alt} className={`md:hidden ${photo.className}`} />}
-
-          <div className="mt-14">
-            <div className="flex items-baseline justify-between gap-3 border-b-2 border-navy pb-2">
-              <h3 className="text-xl font-bold">추가 공약</h3>
-              <span className="text-sm text-muted tabular-nums">{extras.length}개 · 눌러서 자세히</span>
-            </div>
-            <ul className="divide-y divide-line border-b border-line">
-              {extras.map((p, i) => (
-                <ExtraPledge key={p.id} p={p} i={i} />
-              ))}
-            </ul>
-          </div>
-
-          {photo && c.id === 'connect' && <img src={photo.src} alt={photo.alt} className={photo.className} />}
-
-          <img src="figma/logo-navy.svg" alt="" className="logo mt-8 h-8 w-auto" />
-        </div>
-      </div>
-    </div>
+      <p className="mt-3 text-[14px] leading-relaxed text-body">{c.intro}</p>
+      <ol className="mt-2 divide-y divide-line">
+        {c.pledges.map((p, i) => (
+          <li key={p.id}>
+            <PledgeRow p={p} i={i} />
+          </li>
+        ))}
+      </ol>
+    </section>
   )
 }
 
 function Pledges() {
   return (
-    <section id="pledges" className="scroll-mt-14">
-      <div className="gutter pt-4 pb-14">
-        <Reveal className="wrap">
-          <Label>공약</Label>
-          <h2 className="mt-3 text-[clamp(1.9rem,5vw,3rem)] leading-tight font-bold">세 가지 힘, 공약 {total}개</h2>
-          <p className="mt-3 max-w-[40rem] text-white/75">분야마다 메인공약 2개와 추가 공약으로 나눴습니다. 모든 공약에 근거와 예산, 이행을 점검할 지표를 붙였습니다.</p>
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+    <section id="pledges" aria-labelledby="pledges-title" className="gutter scroll-mt-14 pt-10 pb-16 sm:pt-14 sm:pb-24">
+      <div className="wrap">
+        <Label>공약</Label>
+        <h2 id="pledges-title" className="mt-2 text-[clamp(1.75rem,5vw,2.6rem)] leading-tight font-bold">
+          세 가지 힘, 공약 {total}개
+        </h2>
+        <p className="mt-2 text-white/75">공약 이름을 누르면 자세한 내용이 열립니다.</p>
+        <nav aria-label="분야 바로가기" className="mt-5 lg:hidden">
+          <ul className="flex flex-wrap gap-2">
             {categories.map((c) => (
-              <a
-                key={c.id}
-                href={`#${c.id}`}
-                className="group rounded-2xl border border-white/15 bg-block/40 px-5 py-4 transition-colors hover:border-orange"
-              >
-                <span className="text-sm font-semibold text-orange">{c.no}</span>
-                <span className="mt-1 block text-xl font-bold">{c.name}</span>
-                <span className="mt-1 block text-sm text-white/65 tabular-nums">
-                  메인공약 2 · 추가 공약 {c.pledges.length - 2}
-                </span>
-              </a>
+              <li key={c.id}>
+                <a href={`#${c.id}`} className="block rounded-full border border-white/25 px-3.5 py-1.5 text-[14px] font-semibold">
+                  {c.no} {c.short}
+                </a>
+              </li>
             ))}
-          </div>
-        </Reveal>
+          </ul>
+        </nav>
+        <div className="mt-6 grid gap-5 lg:mt-8 lg:grid-cols-3 lg:items-start">
+          {categories.map((c) => (
+            <CategoryToc key={c.id} c={c} />
+          ))}
+        </div>
       </div>
-      {categories.map((c) => (
-        <CategoryBlock key={c.id} c={c} />
-      ))}
     </section>
   )
+}
+
+function PledgeDetail({ id, onClose }: { id: string; onClose: () => void }) {
+  const { p, c, i } = pledgeIndex.get(id)!
+  const prev = c.pledges[i - 1]
+  const next = c.pledges[i + 1]
+  const heading = useRef<HTMLHeadingElement>(null)
+  useEffect(() => {
+    heading.current?.focus({ preventScroll: true })
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
+  const go = (e: MouseEvent<HTMLAnchorElement>, to: string) => {
+    e.preventDefault()
+    location.replace(detailHash(to)) // 이전·다음은 기록을 쌓지 않음 → 뒤로 가기 한 번이면 목록
+  }
+  return (
+    <div role="dialog" aria-modal="true" aria-labelledby="detail-title" className="fixed inset-0 z-40 overflow-y-auto overscroll-contain bg-white text-ink">
+      <div className="gutter sticky top-0 z-10 border-b border-line bg-white/95 backdrop-blur">
+        <div className="mx-auto flex h-14 max-w-[720px] items-center">
+          <a
+            href={`#${c.id}`}
+            onClick={(e) => {
+              e.preventDefault()
+              onClose()
+            }}
+            className="back -ml-2 flex items-center gap-1 rounded-lg px-2 py-2 text-[15px] font-semibold"
+          >
+            <ChevronLeft className="size-5" aria-hidden />
+            {c.name} 목록으로
+          </a>
+        </div>
+      </div>
+      <article className="gutter pb-16">
+        <div className="mx-auto max-w-[720px] pt-6">
+          <p className="text-[14px] font-semibold text-muted tabular-nums">
+            {c.no} {c.name} · {i + 1}/{c.pledges.length}
+          </p>
+          {p.core && <p className="mt-3 text-[13px] font-bold text-orange-ink">메인공약</p>}
+          <h2 id="detail-title" ref={heading} tabIndex={-1} className="mt-1 text-[clamp(1.55rem,6.4vw,2.3rem)] leading-[1.25] font-bold outline-none">
+            {p.title}
+          </h2>
+          <p className="mt-5 rounded-[20px] bg-bubble px-5 py-4 text-[17px] leading-snug font-bold">{p.summary}</p>
+          <div className="mt-8 space-y-8">
+            <Why items={p.why} />
+            {p.how.length > 0 && <How items={p.how} />}
+            <Meta p={p} />
+            {c.method && (
+              <div className="rounded-2xl bg-paper p-4">
+                <h3 className="text-[13px] font-bold text-muted">시설 공약은 모두 이 순서로 진행합니다</h3>
+                <ol className="mt-2 space-y-1.5 text-[14.5px] font-semibold">
+                  {c.method.map((m, k) => (
+                    <li key={k} className="flex gap-2">
+                      <span className="grid size-5 shrink-0 place-items-center rounded-full bg-orange text-[11px] text-navy">{k + 1}</span>
+                      {m}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+          </div>
+          {(prev || next) && (
+            <nav aria-label="같은 분야의 다른 공약" className="mt-12 grid gap-3 border-t border-line pt-6 sm:grid-cols-2">
+              {prev ? (
+                <a href={detailHash(prev.id)} onClick={(e) => go(e, prev.id)} className="row rounded-xl bg-paper px-4 py-3">
+                  <span className="block text-[13px] text-muted">‹ 이전 공약</span>
+                  <span className="block font-semibold">{prev.title}</span>
+                </a>
+              ) : (
+                <span className="hidden sm:block" />
+              )}
+              {next && (
+                <a href={detailHash(next.id)} onClick={(e) => go(e, next.id)} className="row rounded-xl bg-paper px-4 py-3 sm:text-right">
+                  <span className="block text-[13px] text-muted">다음 공약 ›</span>
+                  <span className="block font-semibold">{next.title}</span>
+                </a>
+              )}
+            </nav>
+          )}
+        </div>
+      </article>
+    </div>
+  )
+}
+
+/* 목록 → 상세 → 뒤로: 브라우저 뒤로 가기와 '목록으로' 링크 모두 같은 자리·같은 공약 줄로 돌아온다 */
+function useDetailRoute() {
+  const [id, setId] = useState(readDetail)
+  const current = useRef(id)
+  useEffect(() => {
+    const onHash = () => {
+      const nextId = readDetail()
+      const closing = current.current && !nextId ? current.current : null
+      current.current = nextId
+      setId(nextId)
+      if (closing) {
+        afterPaint(() => {
+          if (nav.fromList) window.scrollTo(0, nav.scrollY)
+          else document.getElementById(pledgeIndex.get(closing)!.c.id)?.scrollIntoView()
+          document.querySelector<HTMLElement>(`[data-pledge="${closing}"]`)?.focus({ preventScroll: true })
+          nav.fromList = false
+        })
+      }
+    }
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+  const close = useCallback(() => {
+    if (nav.fromList) return history.back()
+    const entry = current.current && pledgeIndex.get(current.current)
+    history.replaceState(null, '', entry ? `#${entry.c.id}` : '#pledges')
+    window.dispatchEvent(new HashChangeEvent('hashchange'))
+  }, [])
+  return [id, close] as const
 }
 
 function Budget() {
@@ -576,19 +644,23 @@ function Footer() {
 }
 
 export default function App() {
+  const [detail, closeDetail] = useDetailRoute()
   return (
     <>
-      <Header />
-      <main>
-        <Hero />
-        <Slogan />
-        <Statement />
-        <Pledges />
-        <Budget />
-        <Candidates />
-        <Vote />
-      </main>
-      <Footer />
+      <div inert={!!detail} aria-hidden={detail ? true : undefined}>
+        <Header />
+        <main>
+          <Hero />
+          <Pledges />
+          <Slogan />
+          <Statement />
+          <Budget />
+          <Candidates />
+          <Vote />
+        </main>
+        <Footer />
+      </div>
+      {detail && <PledgeDetail key={detail} id={detail} onClose={closeDetail} />}
     </>
   )
 }
