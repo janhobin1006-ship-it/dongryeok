@@ -9,7 +9,7 @@
   const { campaign, categories, team } = data
   const all = categories.flatMap((c) => c.pledges.map((p) => ({ ...p, cat: c.name, catId: c.id })))
   const list = (a) => (a && a.length ? `<ul>${a.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : pending('—'))
-  const text = (p) => [p.title, p.summary, ...(p.why || []), ...(p.how || []), p.budget, p.measure].join(' ')
+  const text = (p) => [p.title, p.promise, ...(p.why || []), ...(p.how || [])].join(' ')
 
   // 텍스트 바인딩: data-bind="필드명"
   document.querySelectorAll('[data-bind]').forEach((el) => (el.textContent = campaign[el.dataset.bind] ?? ''))
@@ -41,14 +41,13 @@
         <div class="body">
           ${p.core ? '<span class="badge">메인공약</span> ' : ''}${tab === 'all' ? `<span class="mono" style="font-size:11px">${esc(p.cat)}</span>` : ''}
           <h3>${esc(p.title)}</h3>
-          ${p.summary ? `<p class="sum">${esc(p.summary)}</p>` : ''}
+          ${p.promise ? `<p class="sum">${esc(p.promise)}</p>` : ''}
         </div>
         <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </button>
       <dl class="detail" hidden>
-        <div><dt>왜 필요한가</dt><dd>${list(p.why)}</dd></div>
-        <div><dt>이렇게 하겠습니다</dt><dd>${list(p.how)}</dd></div>
-        <div><dt>예산 · 이행 점검 지표</dt><dd>${esc(p.budget)}<br>${esc(p.measure)}</dd></div>
+        ${p.why && p.why.length ? `<div><dt>왜 필요한가요?</dt><dd>${list(p.why)}</dd></div>` : ''}
+        ${p.how && p.how.length ? `<div><dt>어떻게 추진하나요?</dt><dd>${list(p.how)}</dd></div>` : ''}
       </dl>
     </li>`
   }

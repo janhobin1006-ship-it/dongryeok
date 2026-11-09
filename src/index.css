@@ -81,8 +81,9 @@ details > summary::-webkit-details-marker { display: none; }
 details[open] .chev { transform: rotate(180deg); }
 
 /* 목록 줄·버튼 키보드 포커스: GOV.UK처럼 배경을 칠하고 아래에 굵은 선 (색은 동력 주황·네이비) */
-.row:hover { background: var(--paper); }
-.row:focus-visible, .back:focus-visible, .cta:focus-visible {
+.row:hover { background-color: color-mix(in srgb, currentColor 8%, transparent); }
+.just-read { background-color: rgb(253 104 4 / 0.2) !important; transition: background-color 0.3s; }
+.row:focus-visible, .back:focus-visible, .cta:focus-visible, .menu-btn:focus-visible {
   outline: 3px solid transparent; background: var(--orange); color: var(--navy); box-shadow: 0 4px 0 var(--navy);
 }
 .row:focus-visible .text-muted, .row:focus-visible .text-orange-ink { color: var(--navy); }
@@ -91,4 +92,21 @@ details[open] .chev { transform: rotate(180deg); }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   * { transition: none !important; animation: none !important; }
+}
+
+/* 글자 역할: 분야 제목 / 공약명 / 본문 / 보조 정보 — 어느 화면에서나 같은 역할은 같은 모양 (Pretendard 한 서체) */
+@layer components {
+  .t-cover-org { font-size: 15px; font-weight: 500; letter-spacing: -0.01em; color: rgb(255 255 255 / 0.9); }
+  .t-h2 { font-size: clamp(1.55rem, 5.6vw, 2.5rem); font-weight: 800; line-height: 1.3; letter-spacing: -0.035em; text-wrap: balance; }
+  .t-section { font-size: clamp(1.5rem, 6vw, 2rem); font-weight: 800; line-height: 1.2; letter-spacing: -0.045em; }
+  .t-pledge-main { font-size: 17.5px; font-weight: 700; line-height: 1.45; letter-spacing: -0.025em; }
+  .t-pledge { font-size: 16.5px; font-weight: 600; line-height: 1.45; letter-spacing: -0.02em; }
+  .t-detail { font-size: clamp(1.6rem, 6.4vw, 2.25rem); font-weight: 800; line-height: 1.3; letter-spacing: -0.035em; text-wrap: balance; }
+  .t-name { font-size: clamp(1.6rem, 7vw, 2.4rem); font-weight: 900; line-height: 1.2; letter-spacing: 0.1em; color: var(--ink); }
+  .t-lead { font-size: 18px; line-height: 1.55; letter-spacing: -0.02em; }
+  .t-body { font-size: 16px; line-height: 1.75; letter-spacing: -0.01em; }
+  .t-small { font-size: 14.5px; line-height: 1.55; }
+  .t-meta { font-size: 13.5px; line-height: 1.5; }
+  .t-kicker { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+  @media (min-width: 768px) { .t-cover-org { font-size: 17px; } }
 }

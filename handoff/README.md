@@ -83,15 +83,11 @@ DB로 옮겨도 API가 이 모양 그대로 돌려주면 프론트 코드는 손
       "id": "lotus-council",   // 영문 고유값, URL에 써도 됨
       "core": true,            // true면 메인공약
       "title": "로터스관 협의체 마련",
-      "summary": "최종 문구 한 줄",
-      "why": ["근거 문장 (출처)"],   // 끝 괄호는 작은 출처 표기로 나옴
-      "how": ["실행 단계"],
-      "budget": "예산 출처",
-      "measure": "이행 점검 지표"
+      "promise": "핵심 약속 한 문장",
+      "why": ["왜 필요한가요? (출처)"],   // 없으면 빈 배열 → 화면에서 생략
+      "how": ["어떻게 추진하나요?"]       // 없으면 빈 배열 → 화면에서 생략
     }]
   }],
-  "budgetFacts": [{ "value": "18.5억", "label": "시설관리비", "body": "...", "source": "2025 결산서" }],
-  "roadmap": [{ "when": "2027.2", "what": "..." }],
   "sources": [{ "title": "...", "url": "https://..." }],
   "team": [{ "name": "선거운동본부장", "members": ["..."] }]
 }
@@ -103,8 +99,8 @@ DB로 옮길 때 테이블은 이렇게 나누면 JSON과 바로 맞습니다.
 CREATE TABLE categories (id VARCHAR(32) PRIMARY KEY, no VARCHAR(4), name VARCHAR(50), intro TEXT, sort INT);
 CREATE TABLE pledges (
   id VARCHAR(64) PRIMARY KEY, category_id VARCHAR(32) REFERENCES categories(id),
-  title VARCHAR(200), summary TEXT, core BOOLEAN DEFAULT FALSE,
-  why JSON, how JSON, budget TEXT, measure TEXT, sort INT
+  title VARCHAR(200), core BOOLEAN DEFAULT FALSE,
+  promise TEXT, why JSON, how JSON, sort INT
 );
 ```
 
@@ -142,3 +138,5 @@ handoff/php/api.php 를 MySQL에서 읽도록 바꿔줘.
 - [ ] 선본원 명단: 지금은 노션에서 '확정'된 3명만 공개
 - [ ] 공약 문구 최종본 반영 (정책자료집과 같은 문구인지 대조)
 - [ ] 모바일(폭 400px)과 다크 모드에서 화면 확인
+
+> 11/9: 예산·지표·일정은 공개 데이터에서 뺐습니다. 이전 데이터는 `data/internal/`에 보존되어 있고 사이트는 읽지 않습니다.

@@ -1,17 +1,14 @@
-// 공약 데이터의 원본은 handoff/data/pledges.json 하나입니다.
-// React 사이트, 순수 HTML 버전, PHP·Python 예제가 모두 이 파일을 읽습니다.
-// 내용을 바꿀 때는 JSON만 고치세요.
+// 공개 공약 데이터의 원본은 handoff/data/pledges.json 하나입니다 (피그마 최종 목차·카드뉴스 문구 기준).
+// 이전 노션 데이터(예산·지표·일정)는 handoff/data/internal/에 보존하고, 사이트에서는 읽지 않습니다.
 import data from '../../handoff/data/pledges.json'
 
 export interface Pledge {
   id: string
   title: string
-  summary: string
   core?: boolean
+  promise: string
   why: string[]
   how: string[]
-  budget: string
-  measure: string
 }
 
 export interface Category {
@@ -19,8 +16,6 @@ export interface Category {
   no: string
   name: string
   short: string
-  intro: string
-  method?: string[]
   pledges: Pledge[]
 }
 
@@ -29,7 +24,8 @@ export interface Candidate {
   name: string
   dept: string
   year: string
-  extra: string
+  minor: string
+  origin: string
   photo: string
   history: { year: string; items: string[] }[]
 }
@@ -37,7 +33,5 @@ export interface Candidate {
 export const campaign = data.campaign
 export const candidates = data.campaign.candidates as Candidate[]
 export const categories = data.categories as Category[]
-export const budgetFacts = data.budgetFacts
-export const roadmap = data.roadmap
 export const sources = data.sources
 export const team = data.team
