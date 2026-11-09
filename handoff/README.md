@@ -139,4 +139,5 @@ handoff/php/api.php 를 MySQL에서 읽도록 바꿔줘.
 - [ ] 공약 문구 최종본 반영 (정책자료집과 같은 문구인지 대조)
 - [ ] 모바일(폭 400px)과 다크 모드에서 화면 확인
 
+> 11/9 노션 최종본 반영: 메인 6 + 추가 38. 통합된 공약의 예전 id는 `aliases`(`lotus-noise`→`lotus-council`, `reserve-bus`→`homecoming-bus`)로 합쳐진 공약에 연결합니다. `tuition`은 배움 → 잇는 힘 메인으로 옮겼고 id는 그대로입니다.
 > 11/9: 예산·지표·일정은 공개 데이터에서 뺐습니다. 이전 데이터는 `data/internal/`에 보존되어 있고 사이트는 읽지 않습니다.

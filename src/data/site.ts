@@ -35,3 +35,5 @@ export const candidates = data.campaign.candidates as Candidate[]
 export const categories = data.categories as Category[]
 export const sources = data.sources
 export const team = data.team
+// 통합된 공약의 예전 상세 주소(#/p/<옛 id>)를 합쳐진 공약으로 보냅니다
+export const aliases = data.aliases as Record<string, string>

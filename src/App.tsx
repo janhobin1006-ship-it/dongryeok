@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronDown, ChevronLeft, ChevronRight, Menu, X } from 'lucide-react'
-import { campaign, candidates, categories, sources, type Category, type Pledge } from './data/site'
+import { aliases, campaign, candidates, categories, sources, type Category, type Pledge } from './data/site'
 
 const { vote } = campaign
 const all = categories.flatMap((c) => c.pledges)
@@ -12,7 +12,10 @@ const pledgeIndex = new Map(categories.flatMap((c) => c.pledges.map((p, i) => [p
 const detailHash = (id: string) => `#/p/${id}`
 const readDetail = () => {
   const m = location.hash.match(/^#\/p\/([\w-]+)$/)
-  return m && pledgeIndex.has(m[1]) ? m[1] : null
+  if (!m) return null
+  const id = aliases[m[1]] ?? m[1] // 11/9 통합된 공약의 예전 주소 → 합쳐진 공약으로
+  if (id !== m[1]) history.replaceState(history.state, '', detailHash(id))
+  return pledgeIndex.has(id) ? id : null
 }
 const nav = { fromList: false, scrollY: 0 }
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual' // 돌아올 때 위치는 직접 복원
