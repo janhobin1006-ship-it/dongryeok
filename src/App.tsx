@@ -4,7 +4,8 @@ import { ArrowDown, ChevronDown, ChevronLeft, ChevronRight, Menu, RotateCcw, X }
 import { aliases, campaign, candidates, categories, roadmap, sources, type Block, type Category, type Pledge, type Step } from './data/site'
 
 const { vote } = campaign
-const all = categories.flatMap((c) => c.pledges)
+const listed = (c: Category) => c.pledges.filter((p) => !p.hidden)
+const all = categories.flatMap(listed)
 const pledgeIndex = new Map(categories.flatMap((c) => c.pledges.map((p, i) => [p.id, { p, c, i }] as const)))
 const catById = new Map(categories.map((c) => [c.id, c]))
 
@@ -361,7 +362,7 @@ function SectionCover({ c, as: H = 'h3' }: { c: Category; as?: 'h2' | 'h3' }) {
         {c.name}
       </H>
       <p className="t-meta mt-2 text-white/75">
-        등록 공약 {c.pledges.length}개 · 메인공약 {c.pledges.filter((p) => p.core).length}개
+        공약 {listed(c).length}개 · 메인공약 {listed(c).filter((p) => p.core).length}개
       </p>
       <a
         href="#roadmap"
@@ -376,8 +377,8 @@ function SectionCover({ c, as: H = 'h3' }: { c: Category; as?: 'h2' | 'h3' }) {
 }
 
 function CategoryToc({ c }: { c: Category }) {
-  const mains = c.pledges.filter((p) => p.core)
-  const extras = c.pledges.filter((p) => !p.core)
+  const mains = listed(c).filter((p) => p.core)
+  const extras = listed(c).filter((p) => !p.core)
   return (
     <section id={c.id} aria-labelledby={`${c.id}-title`} className="scroll-mt-16 lg:grid lg:grid-cols-[minmax(0,380px)_1fr] lg:gap-12">
       <SectionCover c={c} />
@@ -404,7 +405,7 @@ function CategoryToc({ c }: { c: Category }) {
 }
 
 function Pledges() {
-  const counts = categories.map((c) => `${c.short} ${c.pledges.length}`).join(' · ')
+  const counts = categories.map((c) => `${c.short} ${listed(c).length}`).join(' · ')
   return (
     <section id="pledges" aria-labelledby="pledges-title" className="gutter scroll-mt-14 bg-white pt-14 pb-16 text-ink sm:pt-20 sm:pb-24">
       <div className="wrap">
@@ -414,7 +415,7 @@ function Pledges() {
             {campaign.tocTitle}
           </h2>
           <p className="t-meta mt-2 text-muted">
-            등록 공약 {all.length}개({counts}) · 공약명을 누르면 자세히 볼 수 있습니다
+            메인공약 {all.filter((p) => p.core).length}개와 추가 공약 {all.filter((p) => !p.core).length}개({counts}) · 공약명을 누르면 자세히 볼 수 있습니다
           </p>
         </div>
         <div className="mt-10 space-y-16 sm:space-y-20">
@@ -697,11 +698,6 @@ function PledgeDetail({ id, onClose }: { id: string; onClose: () => void }) {
           <h2 id="detail-title" ref={heading} tabIndex={-1} className="t-detail mt-2 outline-none">
             {p.detailTitle ?? p.title}
           </h2>
-          {p.detailTitle && (
-            <p className="t-small mt-2 text-muted">
-              등록 공약: {c.pledges.filter((x) => x.id === p.id || x.ref === p.id).map((x) => x.title).join(' / ')}
-            </p>
-          )}
           <p className="t-lead mt-5 rounded-2xl bg-bubble px-5 py-4 font-bold">{p.promise}</p>
           {p.why.length > 0 && (
             <section className="mt-9">

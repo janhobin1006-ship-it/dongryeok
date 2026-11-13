@@ -1,6 +1,5 @@
 // 공개 공약 데이터의 원본은 handoff/data/pledges.json 하나입니다.
-// 공약명·순서: 11/10 후보 등록 공약 41개(시설 15 · 배움 10 · 모두 16)
-// 문안·도식·예산 계획·로드맵: 피그마 '발주 물품_정책 자료집' 22면 / 근거·세부 실행: 11/9 노션 최종본
+// 공약명·순서·문안·도식·예산 계획·로드맵: 피그마 '발주 물품_정책 자료집' 22면(최종본) / 근거·세부 실행: 11/9 노션 최종본
 import data from '../../handoff/data/pledges.json'
 
 export interface Step {
@@ -26,6 +25,8 @@ export interface Pledge {
   /** 등록서에서 따로 적힌 공약이 자료집의 다른 공약 상세 안에서 설명될 때 */
   ref?: string
   focus?: string
+  /** 목차에는 없고 주소로만 여는 항목(예: 로터스관 소음 갈래) */
+  hidden?: boolean
 }
 
 export interface Category {
