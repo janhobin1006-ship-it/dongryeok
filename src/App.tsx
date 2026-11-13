@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowDown, ChevronDown, ChevronLeft, ChevronRight, Menu, RotateCcw, X } from 'lucide-react'
-import { aliases, campaign, candidates, categories, roadmap, sources, type Block, type Category, type Pledge, type Step } from './data/site'
+import { aliases, campaign, candidates, categories, roadmap, sources, type Block, type Candidate, type Category, type Pledge, type Step } from './data/site'
 
 const { vote } = campaign
 const listed = (c: Category) => c.pledges.filter((p) => !p.hidden)
@@ -156,9 +156,7 @@ function Hero() {
           <h1 id="cover-title" className="t-cover-title mt-6">
             {campaign.bookTitle}
           </h1>
-          <p className="mt-7">
-            <img src="figma/slogan-final.png" alt={campaign.slogan} width={994} height={212} className="h-auto w-[min(76vw,380px)]" />
-          </p>
+          <p className="t-slogan mt-6 text-orange">{campaign.slogan}</p>
           <p className="t-lead mt-3 max-w-[26ch] text-white/85 md:max-w-none">{campaign.sloganSub}</p>
           <div className="mt-8 flex w-full max-w-[420px] flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row">
             <a href="#pledges" className="cta inline-flex items-center justify-center gap-2 rounded-full bg-orange px-7 py-3.5 text-[17px] font-bold text-navy">
@@ -175,69 +173,73 @@ function Hero() {
   )
 }
 
-/* 2~3면 후보 소개: 두 면에 걸친 손글씨 '동국을 움직일 힘, 동력을 만들다' → 정장 사진 → 이름·전공 → 연도별 약력 */
+/* 2~3면 후보 소개: '동국을 움직일 힘, 동력을 만들다' → 두 후보 사진(왼쪽 부후보 전채희, 오른쪽 정후보 전호빈) → 이름·전공 → 연도별 약력 */
+function Bio({ c, className = '' }: { c: Candidate; className?: string }) {
+  return (
+    <section aria-labelledby={`bio-${c.name}`} className={className}>
+      <h3 id={`bio-${c.name}`} className="t-pledge border-b border-ink pb-2">
+        {c.role} {c.name} 약력
+      </h3>
+      <p className="t-meta mt-3 text-muted">{c.origin}</p>
+      <dl className="mt-4 space-y-5">
+        {c.history.map((h) => (
+          <div key={h.year} className="grid grid-cols-[3.25rem_1fr] gap-x-3">
+            <dt className="t-meta pt-0.5 font-bold text-ink tabular-nums">{h.year}</dt>
+            <dd>
+              <ul className="space-y-1.5">
+                {h.items.map((it) => (
+                  <li key={it} className="t-small text-body">
+                    {it}
+                  </li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  )
+}
+
 function Candidates() {
+  const [lead, vice] = candidates
   return (
     <section id="candidates" aria-labelledby="candidates-title" className="gutter scroll-mt-14 bg-white py-14 text-ink sm:py-20">
       <div className="wrap">
         <p className="t-kicker text-orange-ink">후보 소개</p>
-        <h2 id="candidates-title" className="mt-3">
-          <span className="sr-only">동국을 움직일 힘, 동력을 만들다</span>
-          <span aria-hidden className="grid gap-x-12 gap-y-2 md:grid-cols-2">
-            <img src="figma/hand-candidates-1.png" alt="" width={515} height={106} className="h-auto w-[min(86vw,420px)]" />
-            <img src="figma/hand-candidates-2.png" alt="" width={531} height={147} className="h-auto w-[min(88vw,432px)]" />
+        <h2 id="candidates-title" className="mt-3 text-orange">
+          <span className="t-hand-1 block">동국을 움직일 힘,</span>
+          <span className="t-hand-2 block">
+            <span className="t-hand-strong">동력</span>을 만들다
           </span>
         </h2>
-        <div className="mt-9 grid grid-cols-2 gap-3 sm:gap-8 md:gap-12">
-          {candidates.map((c) => (
-            <figure key={c.name}>
-              <div className="overflow-hidden rounded-2xl bg-paper md:max-w-[340px]">
-                <img src={c.photo} alt={`${c.role} ${c.name} 정장 사진`} width={720} height={1000} loading="lazy" className="h-auto w-full" />
-              </div>
-              <figcaption className="mt-4">
+        <figure className="mx-auto mt-8 max-w-[720px]">
+          <div className="overflow-hidden rounded-2xl bg-paper">
+            <img src="photos/duo-candidates.webp" alt={`${vice.role} ${vice.name}(왼쪽)과 ${lead.role} ${lead.name}(오른쪽)`} width={1400} height={1392} loading="lazy" className="h-auto w-full" />
+          </div>
+          <figcaption className="mt-4 grid grid-cols-2 gap-3 text-center">
+            {[vice, lead].map((c) => (
+              <div key={c.name}>
                 <p className="t-kicker text-orange-ink">{c.role}</p>
                 <p className="t-name mt-0.5">{c.name}</p>
                 <p className="t-pledge mt-1">
                   {c.dept} {c.year}
                 </p>
                 <p className="t-meta mt-0.5 text-muted">{c.minor}</p>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
+              </div>
+            ))}
+          </figcaption>
+        </figure>
         <div className="mt-12 grid gap-10 md:grid-cols-2 md:gap-12">
-          {candidates.map((c) => (
-            <section key={c.name} aria-labelledby={`bio-${c.name}`}>
-              <h3 id={`bio-${c.name}`} className="t-pledge border-b border-ink pb-2">
-                {c.role} {c.name} 약력
-              </h3>
-              <p className="t-meta mt-3 text-muted">{c.origin}</p>
-              <dl className="mt-4 space-y-5">
-                {c.history.map((h) => (
-                  <div key={h.year} className="grid grid-cols-[3.25rem_1fr] gap-x-3">
-                    <dt className="t-meta pt-0.5 font-bold text-ink tabular-nums">{h.year}</dt>
-                    <dd>
-                      <ul className="space-y-1.5">
-                        {h.items.map((it) => (
-                          <li key={it} className="t-small text-body">
-                            {it}
-                          </li>
-                        ))}
-                      </ul>
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </section>
-          ))}
+          <Bio c={lead} className="md:order-2" />
+          <Bio c={vice} className="md:order-1" />
         </div>
       </div>
     </section>
   )
 }
 
-/* 4면 슬로건: 먼저 움직이겠습니다 / 함께 만들겠습니다 / 끝까지 책임지겠습니다 (손글씨는 자료집 원본 벡터) */
-const handOf: Record<string, [string, number, number]> = { 먼저: ['hand-first', 64, 30], 함께: ['hand-together', 71, 37], 끝까지: ['hand-end', 95, 39] }
+/* 4면 슬로건: 먼저 움직이겠습니다 / 함께 만들겠습니다 / 끝까지 책임지겠습니다 */
 function Slogan() {
   return (
     <section id="slogan" aria-labelledby="slogan-title" className="gutter scroll-mt-14 border-t border-line bg-white py-14 text-ink sm:py-20">
@@ -251,18 +253,13 @@ function Slogan() {
           <p className="t-body mt-4 max-w-[62ch] text-body">{campaign.nameNote}</p>
         </Reveal>
         <ul className="mt-10 grid gap-8 md:grid-cols-3 md:gap-10">
-          {campaign.values.map((v) => {
-            const [file, w, h] = handOf[v.key]
-            return (
-              <li key={v.key} className="border-t-2 border-ink pt-4">
-                <p>
-                  <img src={`figma/${file}.svg`} alt={v.key} width={w} height={h} className="h-10 w-auto" />
-                </p>
-                <p className="t-pledge-main mt-2">{v.title}</p>
-                <p className="t-body mt-2 text-body">{v.body}</p>
-              </li>
-            )
-          })}
+          {campaign.values.map((v) => (
+            <li key={v.key} className="border-t-2 border-ink pt-4">
+              <p className="t-value text-orange">{v.key}</p>
+              <p className="t-pledge-main mt-2">{v.title}</p>
+              <p className="t-body mt-2 text-body">{v.body}</p>
+            </li>
+          ))}
         </ul>
       </div>
     </section>
@@ -824,9 +821,8 @@ function Vote() {
       <div className="wrap relative z-10">
         <h2 id="vote-title" className="t-h2">
           여러분의 소중한 한 표가
-          <span className="mt-2 flex flex-wrap items-end gap-x-3">
-            <img src="figma/slogan-final.png" alt={campaign.slogan} width={994} height={212} className="h-auto w-[min(70vw,340px)]" />
-            <span>이 됩니다.</span>
+          <span className="mt-1 block">
+            <span className="t-slogan-lg text-orange">{campaign.slogan}</span>이 됩니다.
           </span>
         </h2>
         <div className="mt-9">

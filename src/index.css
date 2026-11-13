@@ -144,6 +144,13 @@ details[open] .chev { transform: rotate(180deg); }
   .t-small { font-size: 14.5px; line-height: 1.55; }
   .t-meta { font-size: 13.5px; line-height: 1.5; }
   .t-kicker { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+  /* 손글씨 자리도 Pretendard로 — 자리마다 크기를 달리 */
+  .t-slogan { font-size: clamp(1.9rem, 8.4vw, 2.9rem); font-weight: 800; line-height: 1.2; letter-spacing: -0.05em; }
+  .t-slogan-lg { font-size: 1.32em; font-weight: 900; letter-spacing: -0.05em; margin-right: 0.12em; }
+  .t-hand-1 { font-size: clamp(1.7rem, 7.2vw, 2.6rem); font-weight: 700; line-height: 1.25; letter-spacing: -0.045em; }
+  .t-hand-2 { font-size: clamp(2.3rem, 10.5vw, 4rem); font-weight: 800; line-height: 1.12; letter-spacing: -0.05em; }
+  .t-hand-strong { font-weight: 900; color: var(--orange); }
+  .t-value { font-size: clamp(2.1rem, 9vw, 2.75rem); font-weight: 900; line-height: 1; letter-spacing: -0.05em; }
   .t-wordmark { font-size: 16px; font-weight: 800; letter-spacing: 0.14em; }
   .t-cover-title { font-size: clamp(2.3rem, 10vw, 3.75rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.045em; }
   .t-num { font-size: clamp(76px, 21vw, 124px); font-weight: 200; line-height: 0.9; letter-spacing: -0.05em; }
