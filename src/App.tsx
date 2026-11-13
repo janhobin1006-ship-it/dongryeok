@@ -211,9 +211,9 @@ function Candidates() {
         <p className="t-kicker text-orange-ink">후보 소개</p>
         <h2 id="candidates-title" className="mt-3">
           <span className="sr-only">동국을 움직일 힘, 동력을 만들다</span>
-          <span aria-hidden className="grid gap-x-12 gap-y-2 md:grid-cols-2">
-            <img src="figma/hand-candidates-1.png" alt="" width={515} height={106} className="h-auto w-[min(86vw,420px)]" />
-            <img src="figma/hand-candidates-2.png" alt="" width={531} height={147} className="h-auto w-[min(88vw,432px)]" />
+          <span aria-hidden className="flex flex-wrap items-end gap-x-4 gap-y-1">
+            <img src="figma/hand-candidates-1.png" alt="" width={515} height={106} className="h-auto w-[min(80vw,400px)]" />
+            <img src="figma/hand-candidates-2.png" alt="" width={531} height={147} className="h-auto w-[min(82vw,412px)]" />
           </span>
         </h2>
         <figure className="mx-auto mt-8 max-w-[720px]">
@@ -830,9 +830,9 @@ function Vote() {
       <div className="wrap relative z-10">
         <h2 id="vote-title" className="t-h2">
           여러분의 소중한 한 표가
-          <span className="mt-2 flex flex-wrap items-end gap-x-3">
-            <img src="figma/slogan-final.png" alt={campaign.slogan} width={994} height={212} className="h-auto w-[min(70vw,340px)]" />
-            <span>이 됩니다.</span>
+          <span className="mt-2 flex items-end gap-x-2">
+            <img src="figma/slogan-final.png" alt={campaign.slogan} width={994} height={212} className="h-auto w-[min(50vw,360px)]" />
+            <span className="shrink-0">이 됩니다.</span>
           </span>
         </h2>
         <div className="mt-9">
