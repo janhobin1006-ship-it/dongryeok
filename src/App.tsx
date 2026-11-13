@@ -208,10 +208,10 @@ function Candidates() {
   return (
     <section id="candidates" aria-labelledby="candidates-title" className="gutter scroll-mt-14 bg-white py-14 text-ink sm:py-20">
       <div className="wrap">
-        <p className="t-kicker text-orange-ink">후보 소개</p>
+        <p className="t-kicker text-center text-orange-ink">후보 소개</p>
         <h2 id="candidates-title" className="mt-3">
           <span className="sr-only">동국을 움직일 힘, 동력을 만들다</span>
-          <span aria-hidden className="flex flex-wrap items-end gap-x-4 gap-y-1">
+          <span aria-hidden className="flex flex-wrap items-end justify-center gap-x-4 gap-y-1">
             <img src="figma/hand-candidates-1.png" alt="" width={515} height={106} className="h-auto w-[min(80vw,400px)]" />
             <img src="figma/hand-candidates-2.png" alt="" width={531} height={147} className="h-auto w-[min(82vw,412px)]" />
           </span>
