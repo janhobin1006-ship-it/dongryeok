@@ -477,7 +477,10 @@ function Roadmap() {
         <h2 id="roadmap-title" className="t-h2 mt-2">
           월별 추진 일정
         </h2>
-        <p className="t-body mt-2 max-w-[60ch] text-body">시설·배움·모두 세 분야의 로드맵을 시기별로 모았습니다. 공약명이 있는 일정은 눌러서 바로 볼 수 있습니다.</p>
+        <p id="roadmap-desc" className="t-body mt-2 text-body">
+          <span className="block">세 분야의 일정을 시기별로 모았습니다.</span>
+          <span className="block">굵은 글씨를 누르면 공약으로 이동합니다.</span>
+        </p>
 
         {/* 모바일·태블릿: 시기 선택 → 세 분야 */}
         <div className="lg:hidden">
@@ -499,7 +502,7 @@ function Roadmap() {
                   </p>
                   <ul className="mt-2 space-y-2">
                     {roadmap.rows[f][period].map((line) => (
-                      <li key={line} className="t-pledge flex gap-2">
+                      <li key={line} className="t-pledge flex gap-2 font-normal text-body">
                         <span aria-hidden className="mt-[0.6em] size-1.5 shrink-0 rounded-full bg-orange" />
                         <span>
                           <RoadmapLine line={line} />

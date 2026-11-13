@@ -101,7 +101,7 @@ details[open] .chev { transform: rotate(180deg); }
 /* 월별 추진 일정 */
 .period-btn { background: #fff; border: 1px solid var(--line); color: var(--ink); }
 .period-btn[aria-pressed='true'], .period-btn.is-target { background: var(--orange); border-color: var(--orange); color: var(--navy); }
-.rm-link { font-weight: 600; color: var(--ink); text-decoration: underline; text-decoration-color: var(--orange); text-decoration-thickness: 2px; text-underline-offset: 4px; border-radius: 4px; }
+.rm-link { font-weight: 700; color: var(--ink); text-decoration: none; border-radius: 4px; }
 .rm-link:hover { color: var(--orange-ink); }
 .rm-card.is-focus, tr.is-focus > th { box-shadow: inset 4px 0 0 var(--orange); }
 .rm-table th, .rm-table td { border-bottom: 1px solid var(--line); }
