@@ -83,11 +83,47 @@ details[open] .chev { transform: rotate(180deg); }
 /* 목록 줄·버튼 키보드 포커스: GOV.UK처럼 배경을 칠하고 아래에 굵은 선 (색은 동력 주황·네이비) */
 .row:hover { background-color: color-mix(in srgb, currentColor 8%, transparent); }
 .just-read { background-color: rgb(253 104 4 / 0.2) !important; transition: background-color 0.3s; }
-.row:focus-visible, .back:focus-visible, .cta:focus-visible, .menu-btn:focus-visible {
+.row:focus-visible, .back:focus-visible, .cta:focus-visible, .menu-btn:focus-visible, .period-btn:focus-visible, .rm-link:focus-visible {
   outline: 3px solid transparent; background: var(--orange); color: var(--navy); box-shadow: 0 4px 0 var(--navy);
 }
 .row:focus-visible .text-muted, .row:focus-visible .text-orange-ink { color: var(--navy); }
 .cta:focus-visible { box-shadow: 0 0 0 3px var(--navy), 0 0 0 6px #fff; }
+
+/* 표지(1면)·투표 안내(22면): 짙은 남색 + 하단으로 번지는 자줏빛 */
+.cover-bg {
+  background:
+    radial-gradient(140% 62% at 50% 104%, rgb(253 100 1 / 0.32) 0%, rgb(253 100 1 / 0.13) 42%, transparent 74%),
+    #0e0b40;
+}
+/* 분야 표지(7·12·17면): 큰 01·02·03, 짙은 남색, 가는 캠퍼스 선화 */
+.sec-cover { background: linear-gradient(200deg, rgb(253 100 1 / 0) 38%, rgb(253 100 1 / 0.19) 100%), #0e0b40; }
+
+/* 월별 추진 일정 */
+.period-btn { background: #fff; border: 1px solid var(--line); color: var(--ink); }
+.period-btn[aria-pressed='true'], .period-btn.is-target { background: var(--orange); border-color: var(--orange); color: var(--navy); }
+.rm-link { font-weight: 600; color: var(--ink); text-decoration: underline; text-decoration-color: var(--orange); text-decoration-thickness: 2px; text-underline-offset: 4px; border-radius: 4px; }
+.rm-link:hover { color: var(--orange-ink); }
+.rm-card.is-focus, tr.is-focus > th { box-shadow: inset 4px 0 0 var(--orange); }
+.rm-table th, .rm-table td { border-bottom: 1px solid var(--line); }
+.rm-table tbody tr:first-child > * { border-top: 1px solid var(--ink); }
+.rm-rowhead { background: #fff; }
+.rm-cell { background: #fff; transition: background-color 0.2s; }
+.rm-cell.is-on { background: rgb(253 104 4 / 0.1); }
+
+/* 상세 도식: 단계 흐름 */
+.flow-step { position: relative; display: grid; grid-template-columns: 2rem 1fr; column-gap: 0.85rem; padding-bottom: 1.4rem; }
+.flow .flow-step:not(:last-child)::before { content: ""; position: absolute; left: calc(1rem - 1px); top: 2.1rem; bottom: 0.3rem; width: 2px; background: var(--line); }
+.flow-num { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 999px; background: var(--navy); color: #fff; font-weight: 800; font-size: 15px; }
+.flow-tag { display: inline-block; padding: 1px 9px; border-radius: 999px; background: var(--navy); color: #fff; font-size: 12.5px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.6; }
+.cycle .flow-step { padding-bottom: 0.35rem; align-items: center; }
+.cycle .flow-step p { font-size: 18px; font-weight: 700; }
+.cycle-arrow { grid-column: 1; justify-self: center; margin-top: 0.35rem; }
+@media (min-width: 768px) {
+  .cycle { display: flex; align-items: center; gap: 0.5rem; }
+  .cycle .flow-step { display: flex; gap: 0.6rem; padding: 0.75rem 0.9rem; border: 1px solid var(--line); border-radius: 14px; }
+  .cycle .flow-step + .flow-step { margin-left: 2.25rem; }
+  .cycle-arrow { position: absolute; right: -2rem; top: 50%; margin: -10px 0 0; transform: rotate(-90deg); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -108,5 +144,10 @@ details[open] .chev { transform: rotate(180deg); }
   .t-small { font-size: 14.5px; line-height: 1.55; }
   .t-meta { font-size: 13.5px; line-height: 1.5; }
   .t-kicker { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+  .t-wordmark { font-size: 16px; font-weight: 800; letter-spacing: 0.14em; }
+  .t-cover-title { font-size: clamp(2.3rem, 10vw, 3.75rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.045em; }
+  .t-num { font-size: clamp(76px, 21vw, 124px); font-weight: 200; line-height: 0.9; letter-spacing: -0.05em; }
+  .t-num-sm { font-size: 26px; font-weight: 200; line-height: 1.1; letter-spacing: -0.04em; color: var(--orange-ink); }
+  .t-sec-name { font-size: clamp(1.75rem, 7vw, 2.3rem); font-weight: 300; line-height: 1.2; letter-spacing: -0.05em; }
   @media (min-width: 768px) { .t-cover-org { font-size: 17px; } }
 }
