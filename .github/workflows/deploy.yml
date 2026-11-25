@@ -1,3 +1,5 @@
+# 11/25 사이트 닫음: 빈 사이트를 올려 예전 주소(janhobin1006-ship-it.github.io/dongryeok)도 닫는다.
+# 원본 코드는 그대로 있음. 다시 열려면 이전 버전의 이 파일로 되돌리면 된다.
 name: Deploy to GitHub Pages
 on:
   push:
@@ -17,16 +19,10 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run build
+      - run: mkdir -p closed && touch closed/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: closed
       - id: deployment
         uses: actions/deploy-pages@v4
